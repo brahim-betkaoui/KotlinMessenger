@@ -5,9 +5,11 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import betkaoui.kotlinmessenger.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -55,16 +57,18 @@ class RegisterActivity : AppCompatActivity() {
 
                 selectedPhotoUri = data.data
                 Log.d("RegisterActivity", "Photo uri : ${selectedPhotoUri.toString()}")
-                /*val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
-                val bitmapDrawable = BitmapDrawable(this.resources,bitmap)
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
+                /*val bitmapDrawable = BitmapDrawable(this.resources,bitmap)
                 //btn_select_photo.setBackgroundDrawable(bitmapDrawable)
                 btn_select_photo.background = bitmapDrawable
                 */
 
                 val inputStream = selectedPhotoUri?.let { contentResolver.openInputStream(it) }
                 val drawable = Drawable.createFromStream(inputStream, selectedPhotoUri.toString())
-                btn_select_photo.background = drawable
+                //btn_select_photo.background = drawable
                 btn_select_photo.text = ""
+                btn_select_photo.alpha = 0f
+                civ_select_photo.setImageBitmap(bitmap)
             }
             else
             {
@@ -139,15 +143,13 @@ class RegisterActivity : AppCompatActivity() {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
         val user = User(uid, et_username.text.toString(), profileImageUrl)
 
-        Log.d("RegisterActivity", "uid : $uid")
-        Log.d(
-            "RegisterActivity",
-            "uid : ${user.uid}, username : ${user.username}, profileImageUrl: ${user.profileImageUrl}"
-        )
-
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d("RegisterActivity", "Finally we saved to the user to Firebase Database")
+
+                val intent = Intent(this, LatestMessagesAcitivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
             .addOnFailureListener{
                 Log.d("RegisterActivity", "Message : ${it.message}")
@@ -155,5 +157,3 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 }
-
-class User(val uid: String, val username: String, val profileImageUrl: String)
