@@ -18,11 +18,11 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_et_register"
         android:padding="16dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/iv_chat_from_row"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_chat_from_row"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="8dp"

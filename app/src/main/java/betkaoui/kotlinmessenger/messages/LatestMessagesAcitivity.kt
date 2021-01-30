@@ -1,19 +1,49 @@
-package betkaoui.kotlinmessenger
+package betkaoui.kotlinmessenger.messages
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import betkaoui.kotlinmessenger.NewMessageActivity
+import betkaoui.kotlinmessenger.R
+import betkaoui.kotlinmessenger.registerlogin.RegisterActivity
+import betkaoui.kotlinmessenger.models.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class LatestMessagesAcitivity : AppCompatActivity() {
+
+    companion object {
+        var currentUser : User? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages_acitivity)
 
+        fetchCurrentUser()
+
         verifyUserIsLoggedIn()
+    }
+
+    private fun fetchCurrentUser(){
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot){
+                currentUser = p0.getValue(User::class.java)
+                Log.d("LatestMessages", "Current user ${currentUser?.username}")
+            }
+
+            override fun onCancelled (p0: DatabaseError){
+
+            }
+        })
     }
 
     private fun verifyUserIsLoggedIn() {

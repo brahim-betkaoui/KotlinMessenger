@@ -1,4 +1,4 @@
-package betkaoui.kotlinmessenger
+package betkaoui.kotlinmessenger.registerlogin
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import betkaoui.kotlinmessenger.R
+import betkaoui.kotlinmessenger.messages.LatestMessagesAcitivity
 import betkaoui.kotlinmessenger.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
